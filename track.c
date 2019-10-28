@@ -614,7 +614,9 @@ static void updatePosition(struct aircraft *a, struct modesMessage *mm) {
         a->pos_nic = new_nic;
         a->pos_rc = new_rc;
 
-        update_range_histogram(new_lat, new_lon);
+        if (a->pos_reliable_odd >= 2 && a->pos_reliable_even >= 2) {
+            update_range_histogram(new_lat, new_lon);
+        }
     }
 }
 
