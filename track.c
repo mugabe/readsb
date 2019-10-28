@@ -240,8 +240,15 @@ static double greatcircle(double lat0, double lon0, double lat1, double lon1) {
 }
 
 static void update_range_histogram(double lat, double lon) {
-    if (Modes.stats_range_histo && (Modes.bUserFlags & MODES_USER_LATLON_VALID)) {
-        double range = greatcircle(Modes.fUserLat, Modes.fUserLon, lat, lon);
+    double range = greatcircle(Modes.fUserLat, Modes.fUserLon, lat, lon);
+
+    int valid_latlon = Modes.bUserFlags & MODES_USER_LATLON_VALID;
+
+    if (valid_latlon && range <= Modes.maxRange && range > Modes.stats_current.longest_distance) {
+        Modes.stats_current.longest_distance = range;
+    }
+
+    if (valid_latlon && Modes.stats_range_histo) {
         int bucket = round(range / Modes.maxRange * RANGE_BUCKET_COUNT);
 
         if (bucket < 0)
