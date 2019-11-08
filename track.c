@@ -239,7 +239,7 @@ static double greatcircle(double lat0, double lon0, double lat1, double lon1) {
     return 6371e3 * acos(sin(lat0) * sin(lat1) + cos(lat0) * cos(lat1) * cos(dlon));
 }
 
-static void update_range_histogram(double lat, double lon) {
+static void update_range_histogram(struct modesMessage *mm, struct aircraft *a, double lat, double lon) {
     double range = 0;
 
     int valid_latlon = Modes.bUserFlags & MODES_USER_LATLON_VALID;
@@ -250,6 +250,10 @@ static void update_range_histogram(double lat, double lon) {
     range = greatcircle(Modes.fUserLat, Modes.fUserLon, lat, lon);
 
     if ((range <= Modes.maxRange || Modes.maxRange == 0) && range > Modes.stats_current.longest_distance) {
+        if (range > Modes.stats_alltime.longest_distance) {
+            fprintf(stderr, "New Distance record: %06x: %.1f nmi, %d, %d, %d\n", a->addr, range / 1852.0,
+                    a->pos_reliable_odd, a->pos_reliable_even, mm->source);
+        }
         Modes.stats_current.longest_distance = range;
     }
 
@@ -631,7 +635,7 @@ static void updatePosition(struct aircraft *a, struct modesMessage *mm) {
         a->pos_rc = new_rc;
 
         if (a->pos_reliable_odd >= 2 && a->pos_reliable_even >= 2 && mm->source == SOURCE_ADSB) {
-            update_range_histogram(new_lat, new_lon);
+            update_range_histogram(mm, a, new_lat, new_lon);
         }
     }
 }
