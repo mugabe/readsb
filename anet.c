@@ -125,6 +125,16 @@ int anetTcpKeepAlive(char *err, int fd)
         anetSetError(err, "setsockopt SO_KEEPALIVE: %s", strerror(errno));
         return ANET_ERR;
     }
+    int seconds = 30;
+    if (setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, (void*)&seconds, sizeof(seconds)) == -1) {
+        anetSetError(err, "setsockopt TCP_KEEPINTVL: %s", strerror(errno));
+        return ANET_ERR;
+    }
+    int count = 2;
+    if (setsockopt(fd, SOL_TCP, TCP_KEEPCNT, (void*)&count, sizeof(count)) == -1) {
+        anetSetError(err, "setsockopt TCP_KEEPCNT: %s", strerror(errno));
+        return ANET_ERR;
+    }
     return ANET_OK;
 }
 
