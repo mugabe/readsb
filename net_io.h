@@ -75,6 +75,7 @@ struct client
   int fd; // File descriptor
   int buflen; // Amount of data on buffer
   int modeac_requested; // 1 if this Beast output connection has asked for A/C
+  uint64_t last_receive;
   char buf[MODES_CLIENT_BUF_SIZE + 4]; // Read buffer+padding
 };
 

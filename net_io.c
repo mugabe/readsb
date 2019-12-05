@@ -154,6 +154,7 @@ struct client *createGenericClient(struct net_service *service, int fd) {
     c->fd = fd;
     c->buflen = 0;
     c->modeac_requested = 0;
+    c->last_receive = mstime();
     Modes.clients = c;
 
     ++service->connections;
@@ -1908,6 +1909,13 @@ static void modesReadFromClient(struct client *c) {
             modesCloseClient(c);
             return;
         }
+        if (mstime() - c->last_receive > 4 * 3600 * 1000) {
+            modesCloseClient(c);
+            return; // no data for four hours
+        }
+
+        c->last_receive = mstime();
+
 
         c->buflen += nread;
 
