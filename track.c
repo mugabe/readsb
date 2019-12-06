@@ -1167,7 +1167,7 @@ struct aircraft *trackUpdateFromMessage(struct modesMessage *mm) {
     // Now handle derived data
 
     // derive geometric altitude if we have baro + delta
-    if (compare_validity(&a->altitude_baro_valid, &a->altitude_geom_valid) > 0 &&
+    if (a->altitude_baro_reliable >= 3 && compare_validity(&a->altitude_baro_valid, &a->altitude_geom_valid) > 0 &&
             compare_validity(&a->geom_delta_valid, &a->altitude_geom_valid) > 0) {
         // Baro and delta are both more recent than geometric, derive geometric from baro + delta
         a->altitude_geom = a->altitude_baro + a->geom_delta;
