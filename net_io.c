@@ -2117,7 +2117,7 @@ struct char_buffer generateReceiverJson() {
             "\"version\" : \"%s\", "
             "\"refresh\" : %.0f, "
             "\"history\" : %d",
-            MODES_READSB_VERSION, 1.0 * Modes.json_interval, Modes.json_aircraft_history_next + 1 );
+            MODES_READSB_VERSION, 1.0 * Modes.json_interval, 0 );
 
     if (Modes.json_location_accuracy && (Modes.fUserLat != 0.0 || Modes.fUserLon != 0.0)) {
         if (Modes.json_location_accuracy == 1) {
