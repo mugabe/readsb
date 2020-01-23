@@ -138,13 +138,13 @@ bool beastOpen(void)
         fcntl(Modes.beast_fd, F_SETFL,  O_ASYNC );
     }
 
-    if (cfsetispeed(&tios, B3000000) < 0) {
+    if (cfsetispeed(&tios, B921600) < 0) {
         fprintf(stderr, "Beast cfsetispeed(%s, 3000000): %s\n",
                 Modes.beast_serial, strerror(errno));
         return false;
     }
 
-    if (cfsetospeed(&tios, B3000000) < 0) {
+    if (cfsetospeed(&tios, B921600) < 0) {
         fprintf(stderr, "Beast cfsetospeed(%s, 3000000): %s\n",
                 Modes.beast_serial, strerror(errno));
         return false;
